@@ -1,26 +1,12 @@
-# import the main window object (mw) from aqt
-from aqt import mw
-# import the "show info" tool from utils.py
-from aqt.utils import showInfo, qconnect
-# import all of the Qt GUI library
-from aqt.qt import *
+from aqt.utils import showInfo, qconnect, tr
+from aqt.qt import QMenu
 
-# We're going to add a menu item below. First we want to create a function to
-# be called when the menu item is activated.
+def fuko(id):
+    showInfo(f"ID: {id}")
 
-def testFunction() -> None:
-    # get the number of cards in the current collection, which is stored in
-    # the main window
-    if not mw:
-        return
-    cardCount = mw.col.card_count()
-    # show a message box
-    showInfo("Card count: %d" % cardCount)
+def add_fuko(m: QMenu, id: int):
+    a = m.addAction("Fuko")
+    qconnect(a.triggered, lambda b, did=id: fuko(id))
 
-# create a new menu item, "test"
-action = QAction("test", mw)
-# set it to call testFunction when it's clicked
-qconnect(action.triggered, testFunction)
-# and add it to the tools menu
-if mw:
-    mw.form.menuTools.addAction(action)
+from aqt import gui_hooks
+gui_hooks.deck_browser_will_show_options_menu.append(add_fuko)
