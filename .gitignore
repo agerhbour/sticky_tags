@@ -1,3 +1,4 @@
 .vscode
 test_user
 **/__pycache__
+meta.json
