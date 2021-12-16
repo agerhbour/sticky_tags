@@ -1,4 +1,4 @@
-from aqt.utils import showInfo, qconnect, tr
+from aqt.utils import getText, qconnect, tr
 from aqt.qt import QMenu
 from aqt import mw, deckchooser
 
@@ -17,21 +17,30 @@ def decorate(fn):
 deckchooser.DeckChooser.choose_deck = decorate(deckchooser.DeckChooser.choose_deck)
 ### END HACK
 
-def fuko(id):
-    #TODO: Input here instead of info
-    showInfo(f"Sticky tags: {get_sticky_tags(id)}")
+def sticky_tags(deck_id):
+    deck = mw.col.decks.get(deck_id)
+    new_stickies, succeeded = getText(f"Sticky tags for deck {deck['name']}: ", default=" ".join(get_sticky_tags(deck_id)))
+    if succeeded:
+        set_sticky_tags(deck_id, new_stickies.split(" "))
 
-def add_fuko(m: QMenu, id: int):
-    a = m.addAction("Fuko")
-    qconnect(a.triggered, lambda b, did=id: fuko(id))
+
+def add_sticky_tags_menu(m: QMenu, id: int):
+    a = m.addAction("Sticky tags")
+    qconnect(a.triggered, lambda b, did=id: sticky_tags(id))
 
 from aqt import gui_hooks
-gui_hooks.deck_browser_will_show_options_menu.append(add_fuko)
+gui_hooks.deck_browser_will_show_options_menu.append(add_sticky_tags_menu)
 
 def get_sticky_tags(deck_id):
     deck = mw.col.decks.get(deck_id)
     config = mw.addonManager.getConfig(__name__)
     return config.get(deck['name'], [])
+
+def set_sticky_tags(deck_id, stickies):
+    deck = mw.col.decks.get(deck_id)
+    config = mw.addonManager.getConfig(__name__)
+    config[deck['name']] = stickies
+    mw.addonManager.writeConfig(__name__, config)
 
 from aqt import addcards
 from types import MethodType
