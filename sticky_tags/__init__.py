@@ -1,4 +1,4 @@
-from aqt.utils import getText, qconnect, tr
+from aqt.utils import getText, qconnect
 from aqt.qt import QMenu
 from aqt import mw, deckchooser
 
@@ -43,8 +43,6 @@ def set_sticky_tags(deck_id, stickies):
     mw.addonManager.writeConfig(__name__, config)
 
 from aqt import addcards
-from types import MethodType
-from anki.hooks import wrap
 
 def on_add_cards_did_init(cards : addcards.AddCards):
     deck_id = cards.deck_chooser.selected_deck_id
