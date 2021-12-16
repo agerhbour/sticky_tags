@@ -2,6 +2,7 @@ from aqt.utils import showInfo, qconnect, tr
 from aqt.qt import QMenu
 from aqt import mw, deckchooser
 
+#TODO: delete this decorator
 def decorate(fn):
     def f(self):
         x=fn(self)
@@ -13,6 +14,7 @@ def decorate(fn):
 deckchooser.DeckChooser.choose_deck = decorate(deckchooser.DeckChooser.choose_deck)
 
 def fuko(id):
+    #TODO: Input here instead of info
     showInfo(f"Sticky tags: {get_sticky_tags(id)}")
 
 def add_fuko(m: QMenu, id: int):
@@ -39,6 +41,7 @@ def on_add_cards_did_init(cards : addcards.AddCards):
     update_tags_for_id(deck_id)
 
     def decorate(fn):
+        #TODO: do the right thing here instead of oy vey
         def f(self):
             x=fn(self)
             print("oy vey")
