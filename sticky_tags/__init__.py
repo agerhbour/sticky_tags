@@ -14,7 +14,7 @@ def decorate(fn):
 
     return f
 
-deckchooser.DeckChooser.choose_deck = decorate(deckchooser.DeckChooser.choose_deck)
+deckchooser.DeckChooser.onDeckChange = decorate(deckchooser.DeckChooser.onDeckChange)
 ### END HACK
 
 def sticky_tags(deck_id):
@@ -45,14 +45,14 @@ def set_sticky_tags(deck_id, stickies):
 from aqt import addcards
 
 def on_add_cards_did_init(cards : addcards.AddCards):
-    deck_id = cards.deck_chooser.selected_deck_id
+    deck_id = cards.deckChooser.selectedId()
     def update_tags_for_id(deck_id):
         sticky_tags = get_sticky_tags(deck_id)
         cards.editor.tags.setText(" ".join(sticky_tags))
-        cards.editor.on_tag_focus_lost()
+        cards.editor.saveTags()
     update_tags_for_id(deck_id)
     def f():
-        update_tags_for_id(cards.deck_chooser.selected_deck_id)
+        update_tags_for_id(cards.deckChooser.selectedId())
     after_choose_deck.clear()
     after_choose_deck.append(f)
 
